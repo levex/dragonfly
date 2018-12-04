@@ -127,7 +127,7 @@ static int	takepid(const char *, int);
 int
 main(int argc, char **argv)
 {
-	char buf[_POSIX2_LINE_MAX], *mstr, **pargv, *p, *q, *pidfile;
+	char buf[_POSIX2_LINE_MAX], *mstr, **pargv, *p, *q, *pidfile, *this_tty;
 	const char *execf, *coref;
 	int ancestors, debug_opt, did_action;
 	int i, ch, bestidx, rv, criteria, pidfromfile, pidfilelock;
@@ -180,7 +180,7 @@ main(int argc, char **argv)
 	execf = NULL;
 	coref = _PATH_DEVNULL;
 
-	while ((ch = getopt(argc, argv, "DF:G:ILM:N:P:SU:ac:d:fg:ij:lnoqs:t:u:vx")) != -1)
+	while ((ch = getopt(argc, argv, "DF:G:ILM:N:P:STU:ac:d:fg:ij:lnoqs:t:u:vx")) != -1)
 		switch (ch) {
 		case 'D':
 			debug_opt++;
@@ -269,6 +269,10 @@ main(int argc, char **argv)
 		case 't':
 			makelist(&tdevlist, LT_TTY, optarg);
 			criteria = 1;
+			break;
+		case 'T':
+			this_tty = ttyname(0) + sizeof(_PATH_DEV) - 1;
+			makelist(&tdevlist, LT_TTY, this_tty);
 			break;
 		case 'u':
 			makelist(&euidlist, LT_USER, optarg);
@@ -579,7 +583,7 @@ usage(void)
 	fprintf(stderr,
 		"usage: %s %s [-F pidfile] [-G gid] [-M core] [-N system]\n"
 		"             [-P ppid] [-U uid] [-c class] [-g pgrp] [-j jid]\n"
-		"             [-s sid] [-t tty] [-u euid] pattern ...\n",
+		"             [-s sid] [-T] [-t tty] [-u euid] pattern ...\n",
 		getprogname(), ustr);
 
 	exit(STATUS_BADUSAGE);

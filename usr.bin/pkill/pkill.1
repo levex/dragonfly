@@ -54,8 +54,8 @@
 .Op Fl u Ar euid
 .Ar pattern ...
 .Nm pkill
-.Op Fl Ar signal
-.Op Fl ILafilnovx
+.Op Fl ATr signal
+.Op Fl ITLafilnovx
 .Op Fl F Ar pidfile
 .Op Fl G Ar gid
 .Op Fl M Ar core
@@ -198,6 +198,8 @@ or the shortened form
 A single dash
 .Pq Ql -
 matches processes not associated with a terminal.
+.It Fl T
+Restrict matches to processes associated with the current terminal.
 .It Fl u Ar euid
 Restrict matches to processes with an effective user ID in the
 comma-separated list
